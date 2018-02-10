@@ -27,8 +27,9 @@ def perform(level,box,options):
 	# Pre-condition: fill a selection box in MCEdit with south facing Chests (block 54). This filter does not verify the block type and assumes it is a container
 
 	# Add items to the chests
-	newTE = []
+	
 	for (chunk, _, _) in level.getChunkSlices(box):
+		newTE = []
 		for e in chunk.TileEntities: # Loop through all the block entities in this chunk
 			x = e["x"].value
 			y = e["y"].value
@@ -46,11 +47,12 @@ def perform(level,box,options):
 				item["Slot"] = TAG_Byte(randint(0,27))
 				itemsTag.append(item)
 			if options["Cause the problem?"] == True:
-				# chunk.TileEntities.remove(e)
+				chunk.TileEntities.remove(e)
 				newTE.append(e)
-	if options["Cause the problem?"] == True:
-		print "Replacing the chunk's TileEntities"
-		chunk.TileEntities = newTE
+		if options["Cause the problem?"] == True:
+			print "Replacing the chunk's TileEntities"
+			for f in newTE:
+				chunk.TileEntities.append(f)
 	
 	level.markDirtyBox(box)	
 	
